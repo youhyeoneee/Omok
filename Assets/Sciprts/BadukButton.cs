@@ -23,7 +23,6 @@ public class BadukButton : MonoBehaviour
     
     void SetBaduk()
     {
-        // 
         // 버튼 비활성화 
         _button.enabled = false;
         transform.SetParent(fixedGroup);
