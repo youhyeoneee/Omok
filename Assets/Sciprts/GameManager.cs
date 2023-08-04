@@ -45,7 +45,7 @@ public class GameManager : MonoBehaviour
     #endregion
    
     
-    public delegate void PlayerChanged(bool player);
+    public delegate void PlayerChanged(int color);
     public PlayerChanged playerChanged;
     
     public delegate void OnPlay(bool isPlay);
@@ -56,7 +56,7 @@ public class GameManager : MonoBehaviour
     
 
     // GameManager 에서 사용 하는 데이터
-    public bool player = false;
+    private int player = Constants.Black;
     
     public int[ , ] map = new int[Constants.N+4, Constants.N+4];
     private int[] dy = new int[] { -1, 0, 1, -1 };
@@ -64,6 +64,7 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
+        player = Constants.Black;
         
         // 초기화
         for (int i = 0; i < Constants.N+4; i++)
@@ -79,7 +80,9 @@ public class GameManager : MonoBehaviour
     
     public void ChangePlayer()
     {
-        player = !player;
+        if (player == Constants.Black) player = Constants.White;
+        else if (player == Constants.White) player = Constants.Black;
+        
         playerChanged.Invoke(player);
     }
 

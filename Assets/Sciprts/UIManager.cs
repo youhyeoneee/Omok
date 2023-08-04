@@ -15,7 +15,9 @@ public class UIManager : MonoBehaviour
 
     [Header("메뉴")]
     [SerializeField] private GameObject menuPanel;
-    [SerializeField] private TMP_Text  resultText;
+
+    [SerializeField] private Player whitePlayer;
+    [SerializeField] private Player blackPlayer;
 
     private float xPos;
     private float yPos;
@@ -59,22 +61,26 @@ public class UIManager : MonoBehaviour
         }
         
         // 흑이 선
-        whiteBadukGroup.gameObject.SetActive(false);
-        blackBadukGroup.gameObject.SetActive(true);
+        ChangeBadukButton(Constants.Black);
     }
     
-
-    void ChangeBadukButton(bool player)
+    void ChangeBadukButton(int color)
     {
-        if (player)
-        {
-            whiteBadukGroup.gameObject.SetActive(true);
-            blackBadukGroup.gameObject.SetActive(false);
-        }
-        else
+        if (color == Constants.Black)
         {
             whiteBadukGroup.gameObject.SetActive(false);
+            whitePlayer.DeActivate();
+
             blackBadukGroup.gameObject.SetActive(true);
+            blackPlayer.Activate();
+        }
+        else if (color == Constants.White)
+        {
+            whiteBadukGroup.gameObject.SetActive(true);
+            whitePlayer.Activate();
+
+            blackBadukGroup.gameObject.SetActive(false);
+            blackPlayer.DeActivate();
         }
     }
 
@@ -86,8 +92,8 @@ public class UIManager : MonoBehaviour
         }
         else
         {
-            if (gameManager.winner == Constants.Black) resultText.text = "BLACK IS WIN";
-            else if (gameManager.winner == Constants.White) resultText.text =  "WHITE IS WIN";
+            if (gameManager.winner == Constants.Black) blackPlayer.SetResultImg();
+            else if (gameManager.winner == Constants.White) whitePlayer.SetResultImg();
             menuPanel.gameObject.SetActive(true);
         }
     }
