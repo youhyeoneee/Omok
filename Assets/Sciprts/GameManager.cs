@@ -78,6 +78,7 @@ public class GameManager : MonoBehaviour
 
     }
     
+    // 플레이어 변경
     public void ChangePlayer()
     {
         if (player == Constants.Black) player = Constants.White;
@@ -92,22 +93,40 @@ public class GameManager : MonoBehaviour
         CheckGameEnd();
     }
 
+    // 게임이 끝났는지 (오목이 완성되었는지)
     private void CheckGameEnd()
     {
         for (int i = 0; i <= Constants.N; i++)
         {
             for (int j = 0; j <= Constants.N; j++)
             {
+                // 바둑알이 놓여 있다면
                 if (map[i, j] != 0)
                 {
+                    // 4방향을 검사 
                     for (int dir = 0; dir < 4; dir++)
                     {
                         if (IsOmok(map[i, j], i, j, dir))
                         {
-                            winner = map[i, j];
-                            Debug.Log($"오목 {map[i, j]} 승리");
-                            GameOver();
-                            return;
+                            // 6목인지 반대 방향의 한 알 체크 
+                            int by = i - dy[dir];
+                            int bx = j - dx[dir];
+
+                            // 범위 안
+                            if (by >= 0 || by <= Constants.N || bx >= 0 || bx <= Constants.N )
+                            {
+                                if (map[by, bx] != map[i, j]) 
+                                {
+                                    Win(map[i, j]);
+                                    return;
+                                }
+                            }
+                            // 범위 밖 
+                            else 
+                            {
+                                Win(map[i, j]);
+                                return;
+                            }
                         }
                             
                     }
@@ -115,6 +134,14 @@ public class GameManager : MonoBehaviour
             }
         }
     }
+
+    private void Win(int color)
+    {
+        winner = color;
+        GameOver();
+    }
+    
+    // 오목인지 체크
     private bool IsOmok(int color, int y, int x, int dir)
     {
         int cnt;
@@ -129,6 +156,7 @@ public class GameManager : MonoBehaviour
         
         return (cnt == 5);
     }
+    
     
     private void GameOver()
     {
