@@ -7,8 +7,10 @@ using TMPro;
 
 public class Player : MonoBehaviour
 {
+    public bool isReady = false;
     [SerializeField] private string playerName;
-
+    [SerializeField] private TMP_InputField nameInput;
+    [SerializeField] private Button nameSaveBtn;
     [SerializeField] private TMP_Text nameText;
     [SerializeField] private TMP_Text nameText2;
     [SerializeField] private Image profileImage;
@@ -23,8 +25,7 @@ public class Player : MonoBehaviour
     private GameManager _gameManager;
     void Start()
     {
-        nameText.text = playerName;
-        nameText2.text = playerName;
+        nameSaveBtn.onClick.AddListener(SetName);
         resultImg.gameObject.SetActive(false);
 
         _gameManager = GameManager.Instance;
@@ -48,8 +49,10 @@ public class Player : MonoBehaviour
             else time = 10.0f;
         }
         else
-        {
-            resultImg.gameObject.SetActive(true);
+        {  
+            // 게임이 종료되었을 경우
+            if (_gameManager.isEnd) 
+                resultImg.gameObject.SetActive(true);
         }
 
     }
@@ -71,6 +74,21 @@ public class Player : MonoBehaviour
     public void SetResultImg()
     {
         resultImg.sprite = winImg;
+    }
+
+    private void SetName()
+    {
+        // 이름 설정 
+        playerName = nameInput.text;
+        nameText.text = playerName;
+        nameText2.text = playerName;
+        
+        // UI 비활성화
+        nameInput.gameObject.SetActive(false);
+        nameSaveBtn.gameObject.SetActive(false);
+        
+        // 준비
+        isReady = true;
     }
 
 }

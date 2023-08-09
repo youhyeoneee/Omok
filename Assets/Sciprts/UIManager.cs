@@ -6,6 +6,7 @@ using UnityEngine.UI;
 
 public class UIManager : MonoBehaviour
 {
+    [SerializeField] private Button gameStartButton;
 
     [Header("바둑판")] 
     [SerializeField] private Transform whiteBadukGroup;
@@ -15,6 +16,7 @@ public class UIManager : MonoBehaviour
 
     [Header("메뉴")]
     [SerializeField] private GameObject menuPanel;
+    [SerializeField] private GameObject startImg;
 
     [SerializeField] private Player whitePlayer;
     [SerializeField] private Player blackPlayer;
@@ -29,6 +31,9 @@ public class UIManager : MonoBehaviour
         SetBadukButton();
         
         gameManager = GameManager.Instance;
+        
+        gameStartButton.onClick.AddListener(gameManager.GameStart);
+
         gameManager.playerChanged += ChangeBadukButton;
         gameManager.onPlay += ActivateMenu;
     }
@@ -86,15 +91,22 @@ public class UIManager : MonoBehaviour
 
     void ActivateMenu(bool isPlay)
     {
-        if (isPlay)
+        bool isReady = gameManager.IsPlayersReady();
+        
+        if (isPlay && isReady)
         {
             menuPanel.gameObject.SetActive(false);
+            startImg.SetActive(false);
         }
         else
         {
-            if (gameManager.winner == Constants.Black) blackPlayer.SetResultImg();
-            else if (gameManager.winner == Constants.White) whitePlayer.SetResultImg();
-            menuPanel.gameObject.SetActive(true);
+            // 게임이 종료 되었을 경우
+            if (isReady)
+            {
+                if (gameManager.winner == Constants.Black) blackPlayer.SetResultImg();
+                else if (gameManager.winner == Constants.White) whitePlayer.SetResultImg();
+                menuPanel.gameObject.SetActive(true);
+            }
         }
     }
 }

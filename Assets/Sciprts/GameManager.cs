@@ -43,24 +43,26 @@ public class GameManager : MonoBehaviour
         DontDestroyOnLoad(this.gameObject);
     }
     #endregion
-   
     
+    // 플레이어 변경 delegate
     public delegate void PlayerChanged(int color);
     public PlayerChanged playerChanged;
-    
+    // 게임중인지 delegate 
     public delegate void OnPlay(bool isPlay);
     public OnPlay onPlay;
     
-    public bool isPlay = false;
-    public int winner;
-    
+    public bool     isPlay = false; // 게임 중 인지 
+    public bool     isEnd = false; // 게임이 끝났는지 
 
-    // GameManager 에서 사용 하는 데이터
-    private int player = Constants.Black;
+    public int[ , ] map    = new int[Constants.N+4, Constants.N+4]; // 바둑판 배열 
+    public int      winner; // 이긴 플레이어 
+
+    [SerializeField] private Player[] playerList;
     
-    public int[ , ] map = new int[Constants.N+4, Constants.N+4];
-    private int[] dy = new int[] { -1, 0, 1, -1 };
-    private int[] dx = new int[] { 0, 1, 1, 1 };
+    private int    player = Constants.Black; // 현재 플레이어 색깔
+    private int[]  dy     = new int[] { -1, 0, 1, -1 }; // 방향 벡터 
+    private int[]  dx     = new int[] { 0, 1, 1, 1 }; // 방향 벡터 
+
 
     private void Start()
     {
@@ -72,10 +74,6 @@ public class GameManager : MonoBehaviour
             for (int j = 0; j < Constants.N+4; j++)
                 map[i, j] = 0;
         }
-        
-        isPlay = true;
-        onPlay.Invoke(isPlay);
-
     }
     
     // 플레이어 변경
@@ -87,6 +85,7 @@ public class GameManager : MonoBehaviour
         playerChanged.Invoke(player);
     }
 
+    // 바둑알 놓기
     public void AddBaduk(int y, int x, int color)
     {
         map[y, x] = color;
@@ -135,6 +134,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    // 승리 
     private void Win(int color)
     {
         winner = color;
@@ -157,10 +157,27 @@ public class GameManager : MonoBehaviour
         return (cnt == 5);
     }
     
+    // 플레이어 모두 준비 되었는지
+    public bool IsPlayersReady()
+    {
+        return (playerList[0].isReady && playerList[1].isReady);
+    }
     
+    // 게임 시작
+    public void GameStart()
+    {
+        if (IsPlayersReady())
+        {
+            isPlay = true;
+            onPlay.Invoke(isPlay);
+        }
+    }
+    
+    // 게임 종료 
     private void GameOver()
     {
         isPlay = false;
+        isEnd = true;
         onPlay.Invoke(isPlay);
     }
 }
