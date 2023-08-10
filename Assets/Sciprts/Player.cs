@@ -78,7 +78,10 @@ public class Player : MonoBehaviour
         }
     }
 
-    // 플레이어 활성화 
+        
+    /// <summary>
+    /// 플레이어 활성화 
+    /// </summary>
     public void Activate()
     {
         isTurn = true;
@@ -90,7 +93,9 @@ public class Player : MonoBehaviour
         timeImage.color = Color.black;
     }
     
-    // 플레이어 비활성화 
+    /// <summary>
+    /// 플레이어 비활성화
+    /// </summary>
     public void DeActivate()
     {
         isTurn = false;
@@ -102,13 +107,17 @@ public class Player : MonoBehaviour
         timeImage.color = Color.gray;
     }
 
-    // 결과 이미지 => 승리 이미지로
+    /// <summary>
+    /// 결과 이미지 => 승리 이미지로
+    /// </summary>
     public void SetResultWinImg()
     {
         resultImg.sprite = winImg;
     }
     
-    // 이름 설정
+    /// <summary>
+    /// 이름 설정
+    /// </summary>
     private void SetName()
     {
         // 이름 설정 

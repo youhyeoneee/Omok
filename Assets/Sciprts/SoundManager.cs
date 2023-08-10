@@ -54,7 +54,9 @@ public class SoundManager : MonoBehaviour
 
     }
     
-    // 게임 스테이트에 맞는 사운드 
+    /// <summary>
+    /// 게임 스테이트에 맞는 사운드 재생
+    /// </summary>
     private void PlayGameStateSound(GameState gameState)
     {
         switch (_gameManager.gameState)
@@ -69,7 +71,9 @@ public class SoundManager : MonoBehaviour
 
     }
     
-    // 소리가 끝날 때까지 기다리는 코루틴
+    /// <summary>
+    /// 재생한 사운드가 끝날 때까지 기다리는 코루틴
+    /// </summary>
     private IEnumerator WaitUntilSoundEnd()
     {
         while (true)
@@ -84,7 +88,10 @@ public class SoundManager : MonoBehaviour
         }
     }
     
-    // 바둑알 놓기 
+    
+    /// <summary>
+    /// 바둑알 놓기 사운드 재생
+    /// </summary>
     public void PlayBadukSound()
     {
         _audioSource.PlayOneShot(badukAudio);

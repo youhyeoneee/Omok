@@ -42,7 +42,9 @@ public class UIManager : MonoBehaviour
         SetBadukButton();
     }
     
-    // 바둑판 버튼 세팅 : N*N 배열에 흑, 백 버튼 세팅
+    /// <summary>
+    /// 바둑판 버튼 세팅 : N*N 배열에 흑, 백 버튼 세팅
+    /// </summary>
     void SetBadukButton()
     {
         float yPos = Constants.offset * (Constants.N/2);
@@ -71,7 +73,9 @@ public class UIManager : MonoBehaviour
         ChangeBadukButton(Constants.Black);
     }
     
-    // 바둑판 버튼 변경 : 현재 플레이어에 따라 알맞은 바둑판 버튼 활성화 
+    /// <summary>
+    /// 바둑판 버튼 변경 : 현재 플레이어에 따라 알맞은 바둑판 버튼 활성화 
+    /// </summary>
     void ChangeBadukButton(int color)
     {
         suText.text = $"{_gameManager.su}수";
@@ -94,7 +98,9 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    // 메뉴 활성화 : 이미지, 텍스트 등 게임 상태에 따라 메뉴 활성화 
+    /// <summary>
+    /// 메뉴 활성화 : 이미지, 텍스트 등 게임 상태에 따라 메뉴 활성화 
+    /// </summary>
     void ActivateMenu(GameState gameState)
     {
         switch (gameState)

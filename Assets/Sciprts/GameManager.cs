@@ -92,7 +92,9 @@ public class GameManager : MonoBehaviour
         }
     }
     
-    // 플레이어 변경
+    /// <summary>
+    /// 플레이어 변경
+    /// </summary>
     public void ChangePlayer()
     {
         if (_player == Constants.Black) _player = Constants.White;
@@ -101,7 +103,9 @@ public class GameManager : MonoBehaviour
         playerChanged.Invoke(_player);
     }
 
-    // 바둑알 놓기
+    /// <summary>
+    /// 바둑알 놓기
+    /// </summary>
     public void AddBaduk(int y, int x, int color, BadukButton badukButton)
     {
         // 이전 바둑알 놓임 표시 비활성화
@@ -120,7 +124,9 @@ public class GameManager : MonoBehaviour
         CheckGameEnd();
     }
 
-    // 게임이 끝났는지 (오목이 완성되었는지)
+    /// <summary>
+    /// 게임이 끝났는지 (오목이 완성되었는지)
+    /// </summary>
     private void CheckGameEnd()
     {
         for (int i = 0; i <= Constants.N; i++)
@@ -162,14 +168,18 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    // 승리 
+    /// <summary>
+    /// 승리 
+    /// </summary>
     private void Win(int color)
     {
         winner = color;
         GameOver();
     }
     
-    // 오목인지 체크
+    /// <summary>
+    /// 오목인지 체크
+    /// </summary>
     private bool IsOmok(int color, int y, int x, int dir)
     {
         int cnt;
@@ -185,13 +195,17 @@ public class GameManager : MonoBehaviour
         return (cnt == 5);
     }
     
-    // 플레이어가 모두 준비 되었는지
+    /// <summary>
+    /// 플레이어가 모두 준비 되었는지
+    /// </summary>
     public bool IsPlayersReady()
     {
         return (whitePlayer.isReady && blackPlayer.isReady);
     }
     
-    // 게임 시작
+    /// <summary>
+    /// 게임 시작
+    /// </summary>
     public void GameStart()
     {
         if (IsPlayersReady())
@@ -201,7 +215,9 @@ public class GameManager : MonoBehaviour
         }
     }
     
-    // 게임 플레이중 
+    /// <summary>
+    /// 게임 플레이중
+    /// </summary>
     public void GamePlaying()
     {
         gameState = GameState.Playing;
@@ -211,7 +227,9 @@ public class GameManager : MonoBehaviour
         blackPlayer.isTurn = true;
     }
 
-    // 게임 종료 
+    /// <summary>
+    /// 게임 종료
+    /// </summary>
     private void GameOver()
     {
         gameState = GameState.End;

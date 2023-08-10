@@ -35,6 +35,10 @@ public class BadukButton : MonoBehaviour
         triangleImg.SetActive(false);
     }
 
+        
+    /// <summary>
+    /// 바둑알의 위치와 색 할당
+    /// </summary>
     public void SetPosColor(int y, int x, int color)
     {
         this.y = y;
@@ -42,6 +46,10 @@ public class BadukButton : MonoBehaviour
         this.color = color;
     }
     
+    
+    /// <summary>
+    /// 바둑알 놓기 
+    /// </summary>
     void SetBaduk()
     {
         // 버튼 비활성화 
