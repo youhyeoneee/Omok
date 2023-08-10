@@ -11,6 +11,13 @@ static class Constants
     public const float offset = 26.0f;
 }
 
+public enum GameState
+{
+    Ready,
+    Start,
+    Playing,
+    End
+}
 public class GameManager : MonoBehaviour
 {
 
@@ -48,11 +55,10 @@ public class GameManager : MonoBehaviour
     public delegate void PlayerChanged(int color);
     public PlayerChanged playerChanged;
     // 게임중인지 delegate 
-    public delegate void OnPlay(bool isPlay);
+    public delegate void OnPlay(GameState gameState);
     public OnPlay onPlay;
-    
-    public bool     isPlay = false; // 게임 중 인지 
-    public bool     isEnd = false; // 게임이 끝났는지 
+
+    public GameState gameState = GameState.Ready;
 
     public int[ , ] map    = new int[Constants.N+4, Constants.N+4]; // 바둑판 배열 
     public int      winner; // 이긴 플레이어 
@@ -63,9 +69,9 @@ public class GameManager : MonoBehaviour
     private int[]  dy     = new int[] { -1, 0, 1, -1 }; // 방향 벡터 
     private int[]  dx     = new int[] { 0, 1, 1, 1 }; // 방향 벡터 
 
-
     private void Start()
     {
+        gameState = GameState.Ready;
         player = Constants.Black;
         
         // 초기화
@@ -168,17 +174,25 @@ public class GameManager : MonoBehaviour
     {
         if (IsPlayersReady())
         {
-            isPlay = true;
-            onPlay.Invoke(isPlay);
+            gameState = GameState.Start;
+            onPlay.Invoke(gameState);
         }
     }
     
+    public void GamePlaying()
+    {
+        if (IsPlayersReady())
+        {
+            gameState = GameState.Playing;
+            onPlay.Invoke(gameState);
+        }
+    }
+
     // 게임 종료 
     private void GameOver()
     {
-        isPlay = false;
-        isEnd = true;
-        onPlay.Invoke(isPlay);
+        gameState = GameState.End;
+        onPlay.Invoke(gameState);
     }
 }
 

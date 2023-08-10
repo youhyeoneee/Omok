@@ -25,7 +25,6 @@ public class UIManager : MonoBehaviour
     private float yPos;
     private GameManager gameManager;
 
-    // Start is called before the first frame update
     void Start()
     {
         SetBadukButton();
@@ -89,24 +88,20 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    void ActivateMenu(bool isPlay)
+    void ActivateMenu(GameState gameState)
     {
-        bool isReady = gameManager.IsPlayersReady();
-        
-        if (isPlay && isReady)
+        switch (gameState)
         {
-            menuPanel.gameObject.SetActive(false);
-            startImg.SetActive(false);
-        }
-        else
-        {
-            // 게임이 종료 되었을 경우
-            if (isReady)
-            {
+            case GameState.Playing:
+                menuPanel.gameObject.SetActive(false);
+                startImg.SetActive(false);
+                break;
+            case GameState.End:
                 if (gameManager.winner == Constants.Black) blackPlayer.SetResultImg();
                 else if (gameManager.winner == Constants.White) whitePlayer.SetResultImg();
                 menuPanel.gameObject.SetActive(true);
-            }
+                break;
+            
         }
     }
 }

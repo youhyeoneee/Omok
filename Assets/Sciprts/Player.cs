@@ -22,39 +22,38 @@ public class Player : MonoBehaviour
 
     private bool isTurn = false;
     private float time = 10.0f;
-    private GameManager _gameManager;
+    private GameManager gameManager;
     void Start()
     {
         nameSaveBtn.onClick.AddListener(SetName);
         resultImg.gameObject.SetActive(false);
 
-        _gameManager = GameManager.Instance;
+        gameManager = GameManager.Instance;
     }
 
     public void Update()
     {
-        if (_gameManager.isPlay)
+        switch (gameManager.gameState)
         {
-            if (isTurn)
-            {
-                time -= Time.deltaTime;
-                timeText.text = $"00 : 00 : {Mathf.Ceil(time).ToString("00")}";
-
-                // 시간 초과
-                if (time <= 0)
+            case GameState.Playing:
+                if (isTurn)
                 {
-                    GameManager.Instance.ChangePlayer();
-                }
-            }
-            else time = 10.0f;
-        }
-        else
-        {  
-            // 게임이 종료되었을 경우
-            if (_gameManager.isEnd) 
-                resultImg.gameObject.SetActive(true);
-        }
+                    time -= Time.deltaTime;
+                    timeText.text = $"00 : 00 : {Mathf.Ceil(time).ToString("00")}";
 
+                    // 시간 초과
+                    if (time <= 0)
+                    {
+                        GameManager.Instance.ChangePlayer();
+                    }
+                }
+                else time = 10.0f;
+
+                break;
+            case GameState.End:
+                resultImg.gameObject.SetActive(true);
+                break;
+        }
     }
 
     public void Activate()
