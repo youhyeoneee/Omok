@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class SoundManager : MonoBehaviour
 {
-    
+    // 싱글톤
     #region singleton
     //  Singleton Instance 선언
     private static SoundManager instance = null;
@@ -35,50 +35,59 @@ public class SoundManager : MonoBehaviour
     }
     #endregion
 
-    
-    [SerializeField] private AudioClip gameStartAudio;
-    [SerializeField] private AudioClip badukAudio;
+    // 오디오 클립들 
+    [SerializeField] private AudioClip gameStartAudio; // 게임 시작 오디오 클립
+    [SerializeField] private AudioClip badukAudio; // 바둑알 놓을 때 오디오 클립
 
-    private AudioSource audioSource;
-    private GameManager gameManager;
-    public bool isGameStart = false;
+    private AudioSource _audioSource;
+    private GameManager _gameManager;
     
     void Start()
     {
-        audioSource = GetComponent<AudioSource>();
-        gameManager = GameManager.Instance;
-
-        gameManager.onPlay += PlayGameStateSound;
+        // 오디오 소스, 게임 매니저 초기화
+        _audioSource = GetComponent<AudioSource>();
+        _gameManager = GameManager.Instance;
+    
+        
+        // delegate 할당 
+        _gameManager.onPlay += PlayGameStateSound;
 
     }
+    
+    // 게임 스테이트에 맞는 사운드 
     private void PlayGameStateSound(GameState gameState)
     {
-        switch (gameManager.gameState)
+        switch (_gameManager.gameState)
         {
+            // 게임 시작 시 
             case GameState.Start:
-                audioSource.PlayOneShot(gameStartAudio);
+                _audioSource.PlayOneShot(gameStartAudio);
                 StartCoroutine(WaitUntilSoundEnd());
                 break;
 
         }
 
     }
-
-    public void PlayBadukSound()
-    {
-        audioSource.PlayOneShot(badukAudio);
-
-    }
-    public IEnumerator WaitUntilSoundEnd()
+    
+    // 소리가 끝날 때까지 기다리는 코루틴
+    private IEnumerator WaitUntilSoundEnd()
     {
         while (true)
         {
             yield return null;
-            if (audioSource.isPlaying == false)
+            if (_audioSource.isPlaying == false)
             {
-                gameManager.GamePlaying();
+                // 게임 플레이 
+                _gameManager.GamePlaying();
                 break;
             }
         }
     }
+    
+    // 바둑알 놓기 
+    public void PlayBadukSound()
+    {
+        _audioSource.PlayOneShot(badukAudio);
+    }
+
 }

@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+// 상수들 
 static class Constants
 {
     public const int Black = 1;
@@ -11,6 +12,7 @@ static class Constants
     public const float offset = 26.0f;
 }
 
+// 게임 상태
 public enum GameState
 {
     Ready,
@@ -54,47 +56,67 @@ public class GameManager : MonoBehaviour
     // 플레이어 변경 delegate
     public delegate void PlayerChanged(int color);
     public PlayerChanged playerChanged;
+    
     // 게임중인지 delegate 
     public delegate void OnPlay(GameState gameState);
     public OnPlay onPlay;
 
-    public GameState gameState = GameState.Ready;
-
-    public int[ , ] map    = new int[Constants.N+4, Constants.N+4]; // 바둑판 배열 
-    public int      winner; // 이긴 플레이어 
-
-    [SerializeField] private Player[] playerList;
     
-    private int    player = Constants.Black; // 현재 플레이어 색깔
-    private int[]  dy     = new int[] { -1, 0, 1, -1 }; // 방향 벡터 
-    private int[]  dx     = new int[] { 0, 1, 1, 1 }; // 방향 벡터 
+    public GameState   gameState { get; set; } // 현재 게임 상태
+    public int         winner    { get; set; }  // 승리 플레이어
+    public int         su        { get; set; }  // 현재 몇수인지 
+    public BadukButton lastBaduk { get; set; }  // 마지막으로 놓은 바둑알 
+
+
+    // 플레이어 
+    public Player whitePlayer; // 백 
+    public Player blackPlayer; // 흑 
+    
+    private int      _player; // 현재 플레이어 색깔
+    private int[ , ] _map    = new int[Constants.N+4, Constants.N+4]; // 바둑판 배열 
+    // 방향 벡터 : 오른쪽, 아래, 오아, 오위 대각선
+    private int[]    _dy     = new int[] { 0, 1, 1, -1 };
+    private int[]    _dx     = new int[] { 1, 0, 1, 1 }; 
 
     private void Start()
     {
+        // 초기화 : 게임 상태, 플레이어, 바둑판 배열 
         gameState = GameState.Ready;
-        player = Constants.Black;
+        _player = Constants.Black;
+        su = 0;
         
-        // 초기화
         for (int i = 0; i < Constants.N+4; i++)
         {
             for (int j = 0; j < Constants.N+4; j++)
-                map[i, j] = 0;
+                _map[i, j] = 0;
         }
     }
     
     // 플레이어 변경
     public void ChangePlayer()
     {
-        if (player == Constants.Black) player = Constants.White;
-        else if (player == Constants.White) player = Constants.Black;
+        if (_player == Constants.Black) _player = Constants.White;
+        else if (_player == Constants.White) _player = Constants.Black;
         
-        playerChanged.Invoke(player);
+        playerChanged.Invoke(_player);
     }
 
     // 바둑알 놓기
-    public void AddBaduk(int y, int x, int color)
+    public void AddBaduk(int y, int x, int color, BadukButton badukButton)
     {
-        map[y, x] = color;
+        // 이전 바둑알 놓임 표시 비활성화
+        if (lastBaduk != null)
+        {
+            lastBaduk.triangleImg.SetActive(false);
+        }
+        lastBaduk = badukButton;
+        
+        // 수 증가 
+        su++;
+
+        // 바둑판 배열에 할당
+        _map[y, x] = color;
+
         CheckGameEnd();
     }
 
@@ -106,30 +128,30 @@ public class GameManager : MonoBehaviour
             for (int j = 0; j <= Constants.N; j++)
             {
                 // 바둑알이 놓여 있다면
-                if (map[i, j] != 0)
+                if (_map[i, j] != 0)
                 {
                     // 4방향을 검사 
                     for (int dir = 0; dir < 4; dir++)
                     {
-                        if (IsOmok(map[i, j], i, j, dir))
+                        if (IsOmok(_map[i, j], i, j, dir))
                         {
                             // 6목인지 반대 방향의 한 알 체크 
-                            int by = i - dy[dir];
-                            int bx = j - dx[dir];
+                            int by = i - _dy[dir];
+                            int bx = j - _dx[dir];
 
                             // 범위 안
                             if (by >= 0 || by <= Constants.N || bx >= 0 || bx <= Constants.N )
                             {
-                                if (map[by, bx] != map[i, j]) 
+                                if (_map[by, bx] != _map[i, j]) 
                                 {
-                                    Win(map[i, j]);
+                                    Win(_map[i, j]);
                                     return;
                                 }
                             }
                             // 범위 밖 
                             else 
                             {
-                                Win(map[i, j]);
+                                Win(_map[i, j]);
                                 return;
                             }
                         }
@@ -151,10 +173,10 @@ public class GameManager : MonoBehaviour
     private bool IsOmok(int color, int y, int x, int dir)
     {
         int cnt;
-        for(cnt = 0; color == map[y, x]; cnt++)
+        for(cnt = 0; color == _map[y, x]; cnt++)
         {
-            y += dy[dir]; 
-            x += dx[dir];
+            y += _dy[dir]; 
+            x += _dx[dir];
             
             if (y < 0 || y > Constants.N || x < 0 || x > Constants.N)
                 break;
@@ -163,10 +185,10 @@ public class GameManager : MonoBehaviour
         return (cnt == 5);
     }
     
-    // 플레이어 모두 준비 되었는지
+    // 플레이어가 모두 준비 되었는지
     public bool IsPlayersReady()
     {
-        return (playerList[0].isReady && playerList[1].isReady);
+        return (whitePlayer.isReady && blackPlayer.isReady);
     }
     
     // 게임 시작
@@ -179,12 +201,16 @@ public class GameManager : MonoBehaviour
         }
     }
     
+    // 게임 플레이중 
     public void GamePlaying()
     {
         if (IsPlayersReady())
         {
             gameState = GameState.Playing;
             onPlay.Invoke(gameState);
+
+            whitePlayer.isTurn = false;
+            blackPlayer.isTurn = true;
         }
     }
 

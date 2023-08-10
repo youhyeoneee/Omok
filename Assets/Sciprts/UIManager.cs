@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -6,41 +7,47 @@ using UnityEngine.UI;
 
 public class UIManager : MonoBehaviour
 {
-    [SerializeField] private Button gameStartButton;
-
     [Header("바둑판")] 
-    [SerializeField] private Transform whiteBadukGroup;
-    [SerializeField] private Transform blackBadukGroup;
-    [SerializeField] private GameObject whiteBadukButton;
-    [SerializeField] private GameObject blackbadukButton;
+    [SerializeField] private Transform  whiteBadukGroup; // 백 바둑알들 부모 객체
+    [SerializeField] private Transform  blackBadukGroup; // 흑 바둑알들 부모 객체
+    [SerializeField] private GameObject whiteBadukButton; // 백 바둑알 프리팹
+    [SerializeField] private GameObject blackbadukButton; // 흑 바둑알 프리팹
 
     [Header("메뉴")]
-    [SerializeField] private GameObject menuPanel;
-    [SerializeField] private GameObject startImg;
+    [SerializeField] private Button     gameStartButton; // 게임 시작 버튼
+    [SerializeField] private GameObject menuPanel; // 메뉴 패널
+    [SerializeField] private GameObject startImg; // 게임 시작 이미지 
+    [SerializeField] private TMP_Text   resultText; // 결과 텍스트 
+    [SerializeField] private TMP_Text   suText; // 수 텍스트 
 
-    [SerializeField] private Player whitePlayer;
-    [SerializeField] private Player blackPlayer;
-
-    private float xPos;
-    private float yPos;
-    private GameManager gameManager;
+    private GameManager  _gameManager;
+    private Player       _whitePlayer;
+    private Player       _blackPlayer;
 
     void Start()
     {
-        SetBadukButton();
-        
-        gameManager = GameManager.Instance;
-        
-        gameStartButton.onClick.AddListener(gameManager.GameStart);
+        // 게임매니저, 플레이어 초기화 
+        _gameManager = GameManager.Instance;
+        _whitePlayer = _gameManager.whitePlayer;
+        _blackPlayer = _gameManager.blackPlayer;
 
-        gameManager.playerChanged += ChangeBadukButton;
-        gameManager.onPlay += ActivateMenu;
+        // delegate 할당 
+        _gameManager.playerChanged += ChangeBadukButton;
+        _gameManager.onPlay += ActivateMenu;
+        
+        // 게임 시작 버튼 이벤트리스너 초기화 
+        gameStartButton.onClick.AddListener(_gameManager.GameStart);
+
+        // 바둑판 버튼 세팅
+        SetBadukButton();
     }
     
+    // 바둑판 버튼 세팅 : N*N 배열에 흑, 백 버튼 세팅
     void SetBadukButton()
     {
-        yPos = Constants.offset * (Constants.N/2);
-
+        float yPos = Constants.offset * (Constants.N/2);
+        float xPos;
+        
         for (int i = 0; i <=  Constants.N; i++)
         {
             xPos = Constants.offset * - (Constants.N/2);
@@ -68,40 +75,59 @@ public class UIManager : MonoBehaviour
         ChangeBadukButton(Constants.Black);
     }
     
+    // 바둑판 버튼 변경 : 현재 플레이어에 따라 알맞은 바둑판 버튼 활성화 
     void ChangeBadukButton(int color)
     {
+        suText.text = $"{_gameManager.su}수";
+
         if (color == Constants.Black)
         {
             whiteBadukGroup.gameObject.SetActive(false);
-            whitePlayer.DeActivate();
+            _whitePlayer.DeActivate();
 
             blackBadukGroup.gameObject.SetActive(true);
-            blackPlayer.Activate();
+            _blackPlayer.Activate();
         }
         else if (color == Constants.White)
         {
             whiteBadukGroup.gameObject.SetActive(true);
-            whitePlayer.Activate();
+            _whitePlayer.Activate();
 
             blackBadukGroup.gameObject.SetActive(false);
-            blackPlayer.DeActivate();
+            _blackPlayer.DeActivate();
         }
     }
 
+    // 메뉴 활성화 : 이미지, 텍스트 등 게임 상태에 따라 메뉴 활성화 
     void ActivateMenu(GameState gameState)
     {
         switch (gameState)
         {
-            case GameState.Playing:
-                menuPanel.gameObject.SetActive(false);
+            case GameState.Start:
                 startImg.SetActive(false);
                 break;
-            case GameState.End:
-                if (gameManager.winner == Constants.Black) blackPlayer.SetResultImg();
-                else if (gameManager.winner == Constants.White) whitePlayer.SetResultImg();
-                menuPanel.gameObject.SetActive(true);
+            
+            case GameState.Playing:
+                menuPanel.gameObject.SetActive(false);
                 break;
             
+            case GameState.End:
+                menuPanel.gameObject.SetActive(true);
+                // 게임 결과 텍스트 
+                string winnerName = "";
+                if (_gameManager.winner == Constants.Black)
+                {
+                    _blackPlayer.SetResultWinImg();
+                    winnerName = _blackPlayer.playerName;
+                }
+                else if (_gameManager.winner == Constants.White)
+                {
+                    _whitePlayer.SetResultWinImg();
+                    winnerName = _whitePlayer.playerName;
+                }
+                resultText.text = $"'{winnerName}'님께서 승리 하셨습니다.";
+                resultText.gameObject.SetActive(true);
+                break;
         }
     }
 }
