@@ -93,7 +93,10 @@ public class GameManager : MonoBehaviour
     }
     
     /// <summary>
-    /// 플레이어 변경
+    /// by 유현.
+    /// [플레이어 변경 메서드]
+    /// 현재 플레이어가 흑이라면 백, 백이라면 흑으로 변경한다.
+    /// playerChanged 델리게이트를 호출한다.
     /// </summary>
     public void ChangePlayer()
     {
@@ -104,7 +107,11 @@ public class GameManager : MonoBehaviour
     }
 
     /// <summary>
-    /// 바둑알 놓기
+    /// by 유현.
+    /// [바둑알 추가 메서드]
+    /// 바둑판 2차원 배열 y열 x축에 color색의 바둑알을 놓고,
+    /// 이전에 놓은 바둑알 놓임 표시를 비활성화하기 위해
+    /// 마지막으로 놓은 바둑알(badukButton)을 저장한다.
     /// </summary>
     public void AddBaduk(int y, int x, int color, BadukButton badukButton)
     {
@@ -125,7 +132,10 @@ public class GameManager : MonoBehaviour
     }
 
     /// <summary>
-    /// 게임이 끝났는지 (오목이 완성되었는지)
+    /// by유현.
+    /// [게임 종료 체크 메서드]
+    /// N*N 바둑판 배열을 돌면서
+    /// 바둑알이 있다면 4방향을 오목인지 검사하고, 오목이라면 승리 메서드(Win)를 호출한다.
     /// </summary>
     private void CheckGameEnd()
     {
@@ -169,7 +179,9 @@ public class GameManager : MonoBehaviour
     }
 
     /// <summary>
-    /// 승리 
+    /// by유현.
+    /// [승리 메서드]
+    /// 승자 플레이어를 지정하고 게임 오버 메서드(GameOver)를 호출한다.
     /// </summary>
     private void Win(int color)
     {
@@ -178,7 +190,9 @@ public class GameManager : MonoBehaviour
     }
     
     /// <summary>
-    /// 오목인지 체크
+    /// by유현.
+    /// [오목 체크 메서드]
+    /// y열 x축의 바둑알에서 dir방향으로 color 색깔이 끊기지 않고 이어지는 개수가 5개인지 bool 변수를 반환한다.
     /// </summary>
     private bool IsOmok(int color, int y, int x, int dir)
     {
@@ -196,7 +210,9 @@ public class GameManager : MonoBehaviour
     }
     
     /// <summary>
-    /// 플레이어가 모두 준비 되었는지
+    /// by.유현
+    /// [플레이어 준비 체크 메서드]
+    /// 흑, 백 플레이어가 모두 준비 되었는지를 bool 변수를 반환한다.
     /// </summary>
     public bool IsPlayersReady()
     {
@@ -204,7 +220,10 @@ public class GameManager : MonoBehaviour
     }
     
     /// <summary>
-    /// 게임 시작
+    /// by 유현.
+    /// [게임 시작 메서드]
+    /// 플레이어가 모두 준비되었다면
+    /// 게임 상태를 Start로 변경하고 onPlay 델리게이트를 호출한다.
     /// </summary>
     public void GameStart()
     {
@@ -216,7 +235,10 @@ public class GameManager : MonoBehaviour
     }
     
     /// <summary>
-    /// 게임 플레이중
+    /// by 유현.
+    /// [게임 진행중 메서드]
+    /// 게임 상태를 Playing으로 변경하고 onPlay 델리게이트를 호출한다.
+    /// 흑 플레이어를 선으로 설정한다.
     /// </summary>
     public void GamePlaying()
     {
@@ -228,7 +250,9 @@ public class GameManager : MonoBehaviour
     }
 
     /// <summary>
-    /// 게임 종료
+    /// by 유현.
+    /// [게임 종료 메서드]
+    /// 게임 상태를 End로 변경하고 onPlay 델리게이트를 호출한다.
     /// </summary>
     private void GameOver()
     {

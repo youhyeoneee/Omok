@@ -37,8 +37,11 @@ public class BadukButton : MonoBehaviour
 
         
     /// <summary>
-    /// 바둑알의 위치와 색 할당
+    /// by 유현.
+    /// [바둑알의 위치와 색 할당하는 메서드]
+    /// 바둑알의 위치를 y열 x축로, 색깔을 color로 설정한다. 
     /// </summary>
+    /// <param name="color">Contants.Black, Constants.White 중 한가지를 int로 입력하세요. </param>
     public void SetPosColor(int y, int x, int color)
     {
         this.y = y;
@@ -48,7 +51,11 @@ public class BadukButton : MonoBehaviour
     
     
     /// <summary>
-    /// 바둑알 놓기 
+    /// by 유현.
+    /// [바둑알 놓기 메서드]
+    /// 바둑알이 놓이면 다시 클릭되지 않고,이미지가 비활성화 되지 않도록 하며 놓임 표시를 활성화한다. 
+    /// SoundManager 클래스의 바둑알 놓는 사운드 재생 메서드(PlayBadukSound)를 호출하고 
+    /// GameManager 클래스의 플레이어 변경 메서드(ChangePlayer)를 호출한다.
     /// </summary>
     void SetBaduk()
     {

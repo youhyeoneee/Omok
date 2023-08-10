@@ -49,6 +49,7 @@ public class Player : MonoBehaviour
         switch (_gameManager.gameState)
         {
             case GameState.Start:
+                // 시간 초기화
                 _time = _oneTime;
                 break;
             
@@ -80,7 +81,9 @@ public class Player : MonoBehaviour
 
         
     /// <summary>
-    /// 플레이어 활성화 
+    /// by 유현.
+    /// [플레이어 활성화 메서드]
+    /// 플레이어 이미지 테두리와 타이머를 활성화한다.
     /// </summary>
     public void Activate()
     {
@@ -94,7 +97,9 @@ public class Player : MonoBehaviour
     }
     
     /// <summary>
-    /// 플레이어 비활성화
+    /// by 유현.
+    /// [플레이어 비활성화 메서드]
+    /// 플레이어 이미지 테두리와 타이머를 비활성화한다.
     /// </summary>
     public void DeActivate()
     {
@@ -108,7 +113,9 @@ public class Player : MonoBehaviour
     }
 
     /// <summary>
-    /// 결과 이미지 => 승리 이미지로
+    /// by 유현.
+    /// [승 이미지 설정 메서드]
+    /// 결과 이미지를 승 이미지로 교체한다.
     /// </summary>
     public void SetResultWinImg()
     {
@@ -116,7 +123,9 @@ public class Player : MonoBehaviour
     }
     
     /// <summary>
-    /// 이름 설정
+    /// by 유현.
+    /// [이름 설정 메서드]
+    /// 플레이어의 이름을 설정하고 준비 완료로 변경한다.
     /// </summary>
     private void SetName()
     {

@@ -55,7 +55,11 @@ public class SoundManager : MonoBehaviour
     }
     
     /// <summary>
-    /// 게임 스테이트에 맞는 사운드 재생
+    /// by 유현.
+    /// [게임 상태에 맞는 사운드 재생하는 메서드]
+    /// 게임 상태가 Start일 경우 게임 시작 사운드를 재생한 후,
+    /// 재생한 사운드가 끝날 때까지 기다리는 코루틴(WaitUntilSoundEnd)을 실행한다.
+    /// onPlay 델리게이트 호출 시 실행된다.
     /// </summary>
     private void PlayGameStateSound(GameState gameState)
     {
@@ -72,7 +76,10 @@ public class SoundManager : MonoBehaviour
     }
     
     /// <summary>
-    /// 재생한 사운드가 끝날 때까지 기다리는 코루틴
+    /// by 유현.
+    /// [재생한 사운드가 끝날 때까지 기다리는 코루틴]
+    /// 현재 재생중인 사운드가 끝날 때까지 기다렸다가
+    /// 게임 상태가 Start일 경우, GamaManager 클래스의 게임 진행중 메서드(GamePlaying)를 호출한다.
     /// </summary>
     private IEnumerator WaitUntilSoundEnd()
     {
@@ -82,7 +89,8 @@ public class SoundManager : MonoBehaviour
             if (_audioSource.isPlaying == false)
             {
                 // 게임 플레이 
-                _gameManager.GamePlaying();
+                if (_gameManager.gameState == GameState.Start)
+                    _gameManager.GamePlaying();
                 break;
             }
         }
@@ -90,7 +98,10 @@ public class SoundManager : MonoBehaviour
     
     
     /// <summary>
-    /// 바둑알 놓기 사운드 재생
+    /// by 유현.
+    /// [바둑알 놓는 사운드 재생 메서드]
+    /// 바둑알을 놓은 사운드를 재생한다.
+    /// BadukButton 클래스의 바둑알 놓기 메서드(SetBaduk)에서 호출된다.
     /// </summary>
     public void PlayBadukSound()
     {

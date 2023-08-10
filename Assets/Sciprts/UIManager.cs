@@ -33,7 +33,7 @@ public class UIManager : MonoBehaviour
 
         // delegate 할당 
         _gameManager.playerChanged += ChangeBadukButton;
-        _gameManager.onPlay += ActivateMenu;
+        _gameManager.onPlay += ActivateUI;
         
         // 게임 시작 버튼 이벤트리스너 초기화 
         gameStartButton.onClick.AddListener(_gameManager.GameStart);
@@ -43,7 +43,10 @@ public class UIManager : MonoBehaviour
     }
     
     /// <summary>
-    /// 바둑판 버튼 세팅 : N*N 배열에 흑, 백 버튼 세팅
+    /// by 유현.
+    /// [바둑판 버튼 세팅 메서드]
+    /// 바둑판 이미지에 N*N 2차원 배열 모양으로
+    /// 흑, 백 바둑알 버튼을 생성한다.
     /// </summary>
     void SetBadukButton()
     {
@@ -55,6 +58,7 @@ public class UIManager : MonoBehaviour
             xPos = Constants.offset * - (Constants.N/2);
             for (int j = 0; j <= Constants.N; j++)
             {
+                // 각 버튼들은 blackBadukGroup, whiteBadukGroup의 자식으로 묶여 관리된다. 
                 Vector3 pos = new Vector3(xPos, yPos, 0);
                 GameObject newBadukWhite = Instantiate(whiteBadukButton, whiteBadukGroup);
                 newBadukWhite.GetComponent<BadukButton>().SetPosColor(i, j, Constants.White);
@@ -74,8 +78,11 @@ public class UIManager : MonoBehaviour
     }
     
     /// <summary>
-    /// 바둑판 버튼 변경 : 현재 플레이어에 따라 알맞은 바둑판 버튼 활성화 
+    /// [바둑판 버튼 변경 메서드]
+    /// 현재 플레이어의 색깔에 따라 알맞은 바둑판 버튼 그룹을 활성화한다.
+    /// GamaManager 클래스의 playerChanged 델리게이트가 호출되면 실행된다. 
     /// </summary>
+    /// <param name="color">Contants.Black, Constants.White 중 한가지를 int로 입력하세요. </param>
     void ChangeBadukButton(int color)
     {
         suText.text = $"{_gameManager.su}수";
@@ -99,9 +106,11 @@ public class UIManager : MonoBehaviour
     }
 
     /// <summary>
-    /// 메뉴 활성화 : 이미지, 텍스트 등 게임 상태에 따라 메뉴 활성화 
+    /// [UI 활성화 메서드]
+    /// 게임 상태에 따라 이미지, 텍스트 등 필요로 하는 UI를 활성화한다.
+    /// GamaManager 클래스의 onPlay 델리게이트가 호출되면 실행된다.
     /// </summary>
-    void ActivateMenu(GameState gameState)
+    void ActivateUI(GameState gameState)
     {
         switch (gameState)
         {
