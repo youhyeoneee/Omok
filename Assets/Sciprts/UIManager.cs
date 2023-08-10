@@ -55,15 +55,11 @@ public class UIManager : MonoBehaviour
             {
                 Vector3 pos = new Vector3(xPos, yPos, 0);
                 GameObject newBadukWhite = Instantiate(whiteBadukButton, whiteBadukGroup);
-                newBadukWhite.GetComponent<BadukButton>().y = i;
-                newBadukWhite.GetComponent<BadukButton>().x = j;
-                newBadukWhite.GetComponent<BadukButton>().color = Constants.White;
+                newBadukWhite.GetComponent<BadukButton>().SetPosColor(i, j, Constants.White);
                 newBadukWhite.transform.localPosition = pos;
 
                 GameObject newBadukBlack = Instantiate(blackbadukButton, blackBadukGroup);
-                newBadukBlack.GetComponent<BadukButton>().y = i;
-                newBadukBlack.GetComponent<BadukButton>().x = j;
-                newBadukBlack.GetComponent<BadukButton>().color = Constants.Black;
+                newBadukBlack.GetComponent<BadukButton>().SetPosColor(i, j, Constants.Black);
                 newBadukBlack.transform.localPosition = pos;
                 
                 xPos += Constants.offset;

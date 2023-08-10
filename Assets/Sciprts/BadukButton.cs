@@ -5,11 +5,11 @@ using UnityEngine.UI;
 
 public class BadukButton : MonoBehaviour
 {
-    public int color { get; set; } // 바둑알의 색깔
     
     // 위치 
-    public int x { get; set; }
-    public int y { get; set; }
+    private int color; // 바둑알의 색깔
+    private int x;
+    private int y;
 
     public GameObject triangleImg;
     
@@ -33,6 +33,13 @@ public class BadukButton : MonoBehaviour
         
         // 놓임 표시 이미지 비활성화 
         triangleImg.SetActive(false);
+    }
+
+    public void SetPosColor(int y, int x, int color)
+    {
+        this.y = y;
+        this.x = x;
+        this.color = color;
     }
     
     void SetBaduk()

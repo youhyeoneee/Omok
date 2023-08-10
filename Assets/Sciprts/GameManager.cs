@@ -204,14 +204,11 @@ public class GameManager : MonoBehaviour
     // 게임 플레이중 
     public void GamePlaying()
     {
-        if (IsPlayersReady())
-        {
-            gameState = GameState.Playing;
-            onPlay.Invoke(gameState);
+        gameState = GameState.Playing;
+        onPlay.Invoke(gameState);
 
-            whitePlayer.isTurn = false;
-            blackPlayer.isTurn = true;
-        }
+        whitePlayer.isTurn = false;
+        blackPlayer.isTurn = true;
     }
 
     // 게임 종료 
